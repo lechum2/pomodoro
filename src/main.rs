@@ -1,6 +1,7 @@
 use indicatif::ProgressBar;
 use std::process::Command;
 use std::{env, thread, time};
+extern crate dirs;
 
 fn main() {
     println!("Pomodoro");
@@ -15,5 +16,23 @@ fn main() {
         thread::sleep(one_sec);
     }
     bar.finish();
-    //sleep 40m && notify-send -u critical 'Time is up!' -i stock_dialog-warning && paplay ~/Music/sounds/sms-alert-2-daniel_simon.wav
+
+    Command::new("notify-send")
+        .args([
+            "-u",
+            "critical",
+            "'Time is up!'",
+            "-i",
+            "stock_dialog-warning",
+        ])
+        .spawn()
+        .expect("error on nofify");
+
+    let mut sound_path = dirs::home_dir().expect("could not resolve home dir");
+    sound_path.push("Music/sounds/sms-alert-2-daniel_simon.wav");
+    let sound_path_str = sound_path.to_str().expect("to string error");
+    Command::new("paplay")
+        .arg(sound_path_str)
+        .spawn()
+        .expect("error on sonund");
 }
