@@ -1,8 +1,7 @@
-use indicatif::ProgressBar;
-use std::process::Command;
-use std::{env, thread, time};
 use chrono::Local;
-extern crate dirs;
+use dirs;
+use indicatif::{style::ProgressStyle, ProgressBar};
+use std::{env, process::Command, thread, time};
 
 fn main() {
     println!("Pmodoro started at: {}", Local::now().format("%H:%M"));
@@ -11,6 +10,9 @@ fn main() {
     let seconds = minutes * 60;
 
     let bar = ProgressBar::new(seconds);
+    let style = ProgressStyle::default_bar().progress_chars("##-");
+    bar.set_style(style);
+
     let one_sec = time::Duration::from_secs(1);
     for _ in 0..seconds {
         bar.inc(1);
