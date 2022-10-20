@@ -4,13 +4,15 @@ use indicatif::{style::ProgressStyle, ProgressBar};
 use std::{env, process::Command, thread, time};
 
 fn main() {
-    println!("Pmodoro started at: {}", Local::now().format("%H:%M"));
+    println!("Pomodoro started at: {}", Local::now().format("%H:%M"));
     let args: Vec<String> = env::args().collect();
     let minutes = &args[1].parse::<u64>().unwrap();
     let seconds = minutes * 60;
 
     let bar = ProgressBar::new(seconds);
-    let style = ProgressStyle::default_bar().progress_chars("##-");
+    let style = ProgressStyle::with_template("{elapsed} {wide_bar} {eta}")
+        .unwrap()
+        .progress_chars("##-");
     bar.set_style(style);
 
     let one_sec = time::Duration::from_secs(1);
@@ -38,5 +40,5 @@ fn main() {
         .arg(sound_path_str)
         .spawn()
         .expect("error on sonund");
-    println!("Pmodoro finished at: {}", Local::now().format("%H:%M"));
+    println!("Pomodoro finished at: {}", Local::now().format("%H:%M"));
 }
